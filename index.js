@@ -38,11 +38,42 @@ async function run() {
       res.send(result);
     })
 
+    app.get('/reviews/:id',async(req,res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await reviewsCollection.findOne(query);
+      res.send(result);
+    })
+
+
     app.post('/reviews',async(req,res) =>{
       const review = req.body;
       console.log(review)
       const result = await reviewsCollection.insertOne(review )
       res.send(result);
+    })
+
+    app.put('/reviews/:id', async(req,res)=>{
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)}
+      const options = {upsert: true};
+      const updatedReviews = req.body;
+      const reviews ={
+        $set: {
+          gameCover: updatedReviews.formData.gameCover,
+          gameTitle: updatedReviews.formData.gameTitle,
+          reviewDescription: updatedReviews.formData.reviewDescription,
+          rating: updatedReviews.formData.rating,
+          publishingYear: updatedReviews.formData.publishingYear,
+          genre: updatedReviews.formData.genre,
+          userEmail: updatedReviews.formData.userEmail, 
+          userName: updatedReviews.formData.userName,
+
+        }
+      }
+
+      const result = await reviewsCollection.updateOne(filter,reviews,options)
+      res.send(result)
     })
 
     app.delete('/reviews/:id', async(req,res)=>{
