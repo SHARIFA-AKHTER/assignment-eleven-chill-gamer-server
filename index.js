@@ -9,9 +9,6 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// chillGamer
-// m0gtaEjmh6nfTQDM
-
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.5di9a.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 console.log(uri)
@@ -31,6 +28,7 @@ async function run() {
 
     const reviewsCollection = client.db('reviewsDB').collection('reviews')
 
+    const userCollection = client.db('reviewsDB').collection('users');
 
     app.get('/reviews', async(req, res)=>{
       const cursor = reviewsCollection.find();
@@ -82,6 +80,14 @@ async function run() {
       const result =await reviewsCollection.deleteOne(query);
       res.send(result);
     })
+
+      //Users related apis
+      app.post('/users',async(req,res)=>{
+        const newUser = req.body;
+        console.log('creating new user',newUser)
+        const result = await userCollection.insertOne(newUser);
+        res.send(result);
+      })
 
 
     // Send a ping to confirm a successful connection
