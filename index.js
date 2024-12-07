@@ -30,12 +30,17 @@ async function run() {
 
     const userCollection = client.db('reviewsDB').collection('users');
 
+
     app.get('/reviews', async(req, res)=>{
       const cursor = reviewsCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     })
 
+    // app.get('/reviews',async(req, res){
+    
+
+    // })
     app.get('/reviews/:id',async(req,res) => {
       const id = req.params.id;
       const query = {_id: new ObjectId(id)}
@@ -82,6 +87,13 @@ async function run() {
     })
 
       //Users related apis
+
+    app.get('/users',async(req,res) =>{
+      const cursor = userCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
       app.post('/users',async(req,res)=>{
         const newUser = req.body;
         console.log('creating new user',newUser)
@@ -89,6 +101,23 @@ async function run() {
         res.send(result);
       })
 
+        
+      app.get('/reviews', async (req, res) => {
+        try {
+          const highestRatedGames = await reviewsCollection
+            .find({})
+            .sort({ rating: -1 }) // Sort by rating in descending order
+            .limit(6) // Limit to 6 results
+            .toArray();
+  
+          res.status(200).json(highestRatedGames);
+        } catch (error) {
+          console.error('Error fetching reviews:', error);
+          res.status(500).json({ message: 'Failed to fetch reviews' });
+        }
+      });
+
+      
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
