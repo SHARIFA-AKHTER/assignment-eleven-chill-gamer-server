@@ -37,10 +37,6 @@ async function run() {
       res.send(result);
     })
 
-    // app.get('/reviews',async(req, res){
-    
-
-    // })
     app.get('/reviews/:id',async(req,res) => {
       const id = req.params.id;
       const query = {_id: new ObjectId(id)}
@@ -106,8 +102,8 @@ async function run() {
         try {
           const highestRatedGames = await reviewsCollection
             .find({})
-            .sort({ rating: -1 }) // Sort by rating in descending order
-            .limit(6) // Limit to 6 results
+            .sort({ rating: -1 }) 
+            .limit(6) 
             .toArray();
   
           res.status(200).json(highestRatedGames);
@@ -117,7 +113,7 @@ async function run() {
         }
       });
 
-      
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
