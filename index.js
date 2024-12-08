@@ -30,6 +30,7 @@ async function run() {
 
     const userCollection = client.db('reviewsDB').collection('users');
 
+      // reviews get
 
     app.get('/reviews', async(req, res)=>{
       const cursor = reviewsCollection.find();
@@ -82,7 +83,7 @@ async function run() {
       res.send(result);
     })
 
-      //Users related apis
+    //  users get
 
     app.get('/users',async(req,res) =>{
       const cursor = userCollection.find();
